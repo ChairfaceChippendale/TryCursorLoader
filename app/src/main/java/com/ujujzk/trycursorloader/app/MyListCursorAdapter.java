@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 
 public class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorAdapter.ViewHolder> {
+
+    private Cursor searchCursor;
+
     public MyListCursorAdapter(Context context, Cursor cursor){
         super(context,cursor);
     }
@@ -37,18 +40,23 @@ public class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorA
         viewHolder.mTextView.setText(word);
     }
 
-    int getPositionOf (String query){
-        query = query.toLowerCase();
+    int getPositionOf (String queryWord) {
 
+        queryWord = queryWord.toLowerCase();
 
-        Cursor c = getCursor();
-        int wordColumnIndex = c.getColumnIndex("txt");
-        if (c.moveToFirst()){
+        if (searchCursor == null){
+            searchCursor = getCursor();
+        }
+        int wordColumnIndex = searchCursor.getColumnIndex("txt");
+
+        if (searchCursor.moveToFirst()){
+            int step = 0;
             do {
-                if (c.getString(wordColumnIndex).toLowerCase().startsWith(query)){
-                    return c.getPosition();
+                if (searchCursor.getString(wordColumnIndex).toLowerCase().startsWith(queryWord)){
+                    return searchCursor.getPosition();
                 }
-            } while (c.moveToNext());
+                step++;
+            } while (searchCursor.moveToNext()); //TODO можно добавить ограничение количества шагов, но тогда список обязательно должен быть отсортирован
         }
 
         return 0;
