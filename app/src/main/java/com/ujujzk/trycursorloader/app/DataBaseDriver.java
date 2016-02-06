@@ -10,8 +10,6 @@ import android.util.Log;
 
 public class DataBaseDriver {
 
-    private static final String TAG = "DataBaseDriverTAG";
-
     private static final String DB_NAME = "mydb";
     private static final int DB_VERSION = 1;
     private static final String DB_TABLE = "mytab";
@@ -47,7 +45,14 @@ public class DataBaseDriver {
 
 
     public Cursor getAllData() {
-        return mDB.query(DB_TABLE, null, null, null, null, null, null);
+        return mDB.query(DB_TABLE, null, null, null, null, null, COLUMN_TXT);
+    }
+
+    public Cursor getLimitedDataByQueryWord(String queryWord, int limitNum) {
+        String selection = COLUMN_TXT + " LIKE '" + queryWord + "%'";
+        String limit = "" + limitNum;
+        return mDB.query(DB_TABLE, null, selection, null, null, null, COLUMN_TXT, limit);
+
     }
 
 
