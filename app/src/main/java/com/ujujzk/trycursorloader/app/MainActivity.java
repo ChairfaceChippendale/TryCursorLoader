@@ -14,7 +14,8 @@ import android.view.View;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 
-public class MainActivity extends AppCompatActivity implements android.support.v7.widget.SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity
+        implements android.support.v7.widget.SearchView.OnQueryTextListener {
 
     private static final int QUERY_WORD_RESULT_LIMIT = 100;
     private static final String QUERY_WORD_LIMIT_KEY = "limit";
@@ -103,16 +104,16 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         protected Cursor doInBackground(Bundle... bndl) {
 
             if (bndl == null || bndl.length == 0){
-                return db.getAllData();
+                return CursorLoggerProxy.wrap(db.getAllData());
             }
             final String queryWord = bndl[0].getString(QUERY_WORD_KEY);
             final int limit = bndl[0].getInt(QUERY_WORD_LIMIT_KEY);
 
             if (queryWord == null || limit <= 0) {
-                return db.getAllData();
+                return CursorLoggerProxy.wrap(db.getAllData());
             }
 
-            return db.getLimitedDataByQueryWord(queryWord,limit);
+            return CursorLoggerProxy.wrap(db.getLimitedDataByQueryWord(queryWord, limit));
 
         }
 
@@ -120,8 +121,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
             if (cursor != null){
-
-                listCursorAdapter.swapCursor(cursor);
+                listCursorAdapter.changeCursor(cursor);
                 listManager.scrollToPosition(0);
                 Log.d("MyTAG", "finish");
             }
