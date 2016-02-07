@@ -38,5 +38,10 @@ public class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorA
         String word = cursor.getString(cursor.getColumnIndex("txt"));
 
         viewHolder.mTextView.setText(word);
+
     }
+
+
+
+
 }
