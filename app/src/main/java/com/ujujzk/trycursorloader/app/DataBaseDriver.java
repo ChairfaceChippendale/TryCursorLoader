@@ -55,7 +55,6 @@ public class DataBaseDriver {
 
     }
 
-
     public void addRec(String txt) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_TXT, txt);
