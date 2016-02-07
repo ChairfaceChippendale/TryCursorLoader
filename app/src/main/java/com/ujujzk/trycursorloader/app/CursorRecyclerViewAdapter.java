@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
@@ -42,6 +43,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
         mDataSetObserver = new NotifyingDataSetObserver();
         if (mCursor != null) {
+
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
     }
@@ -109,6 +111,8 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             oldCursor.unregisterDataSetObserver(mDataSetObserver);
         }
         mCursor = newCursor;
+
+
         if (mCursor != null) {
             if (mDataSetObserver != null) {
                 mCursor.registerDataSetObserver(mDataSetObserver);

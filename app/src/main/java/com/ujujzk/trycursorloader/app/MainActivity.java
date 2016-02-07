@@ -3,6 +3,7 @@ package com.ujujzk.trycursorloader.app;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     @Override
     public boolean onQueryTextChange(String query) {
-        Log.d("MyTAG", "start");
+
         Bundle args = new Bundle();
         args.putString(QUERY_WORD_KEY, query);
         args.putInt(QUERY_WORD_LIMIT_KEY, QUERY_WORD_RESULT_LIMIT);
@@ -91,41 +92,50 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
         task = new MyTask();
         task.execute(args);
-
         return true;
     }
 
 
 
-    class MyTask extends AsyncTask<Bundle,Void,Cursor>{
+    class MyTask extends AsyncTask<Bundle,Void,Pair<Cursor,Integer>> {
 
         @Override
-        protected Cursor doInBackground(Bundle... bndl) {
+        protected Pair<Cursor,Integer> doInBackground(Bundle... bndl) {
 
             if (bndl == null || bndl.length == 0){
-                return db.getAllData();
+
+                //return new Pair<Cursor, Integer>(db.getAllData(),db.getAllData().getCount());
+                return new Pair<Cursor, Integer>(null,0);
             }
             final String queryWord = bndl[0].getString(QUERY_WORD_KEY);
             final int limit = bndl[0].getInt(QUERY_WORD_LIMIT_KEY);
 
             if (queryWord == null || limit <= 0) {
-                return db.getAllData();
+                //return new Pair<Cursor, Integer>(db.getAllData(),db.getAllData().getCount());
+                return new Pair<Cursor, Integer>(null,0);
+            }
+            if (queryWord.length() == 0){
+                return new Pair<Cursor, Integer>(null,0);
             }
 
-            return db.getLimitedDataByQueryWord(queryWord,limit);
+            return new Pair<Cursor, Integer>(db.getLimitedDataByQueryWord(queryWord, limit),db.getLimitedDataByQueryWord(queryWord, limit).getCount());
 
         }
 
         @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
-            if (cursor != null){
+        protected void onPostExecute(Pair<Cursor, Integer> cursorAndSize) {
+            super.onPostExecute(cursorAndSize);
+            if (cursorAndSize != null){
 
-                listCursorAdapter.swapCursor(cursor);
+                listCursorAdapter.changeCursor(cursorAndSize.first);
+                listCursorAdapter.setCursorSize(cursorAndSize.second);
                 listManager.scrollToPosition(0);
-                Log.d("MyTAG", "finish");
+
+
             }
         }
+
+
 
     }
 

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Random;
+
 public class DataBaseDriver {
 
     private static final String DB_NAME = "mydb";
@@ -80,11 +82,12 @@ public class DataBaseDriver {
             db.execSQL(DB_CREATE);
 
 //            ContentValues cv = new ContentValues();
-//            for (int i = 1; i < 300000; i++) {
-//                cv.put(COLUMN_TXT, "000" + i);
+//            for (int i = 1; i < 200000; i++) {
+//                int num = (int)(Math.random()*1000000);
+//                cv.put(COLUMN_TXT, "" + num);
 //                db.insert(DB_TABLE, null, cv);
 //                if (i % 1000 == 0){
-//                    Log.d(TAG, "" + i);
+//                    Log.d("TAG", "" + i);
 //                }
 //            }
         }
