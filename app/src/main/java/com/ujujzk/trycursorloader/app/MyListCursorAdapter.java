@@ -35,8 +35,7 @@ public class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorA
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(android.R.layout.simple_list_item_1, parent, false);
-        ViewHolder vh = new ViewHolder(itemView);
-        return vh;
+        return new ViewHolder(itemView);
     }
 
     @Override
@@ -53,7 +52,6 @@ public class MyListCursorAdapter extends CursorRecyclerViewAdapter<MyListCursorA
     @Override
     public int getItemCount() {
         return cursorSize;
-        //return super.getItemCount();
     }
 
     void setCursorSize (int size) {

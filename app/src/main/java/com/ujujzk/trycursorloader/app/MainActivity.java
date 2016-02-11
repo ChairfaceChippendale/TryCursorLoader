@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 return new Pair<Cursor, Integer>(null,0);
             }
 
-            return new Pair<Cursor, Integer>(db.getLimitedDataByQueryWord(queryWord, limit),db.getLimitedDataByQueryWord(queryWord, limit).getCount());
+
+            return db.getLimitedDataByQueryWord(queryWord, limit);
 
         }
 
@@ -134,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
             }
         }
-
 
 
     }

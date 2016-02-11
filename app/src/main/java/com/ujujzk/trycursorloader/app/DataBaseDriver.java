@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.support.v4.util.Pair;
 
 import java.util.Random;
 
@@ -46,27 +47,30 @@ public class DataBaseDriver {
     }
 
 
-    public Cursor getAllData() {
-        return mDB.query(DB_TABLE, null, null, null, null, null, COLUMN_TXT);
-    }
-
-    public Cursor getLimitedDataByQueryWord(String queryWord, int limitNum) {
+    public Pair<Cursor,Integer> getLimitedDataByQueryWord(String queryWord, int limitNum) {
         String selection = COLUMN_TXT + " LIKE '" + queryWord + "%'";
         String limit = "" + limitNum;
-        return mDB.query(DB_TABLE, null, selection, null, null, null, COLUMN_TXT, limit);
+
+        return new Pair<Cursor,Integer>( mDB.query(DB_TABLE, null, selection, null, null, null, COLUMN_TXT, limit),
+                getLimitedDataByQueryWordCount(queryWord, limitNum));
 
     }
 
-    public void addRec(String txt) {
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_TXT, txt);
-        mDB.insert(DB_TABLE, null, cv);
+    private int getLimitedDataByQueryWordCount (String queryWord, int limitNum) {
+        int count;
+        String countQuery = "select count(*) from " + DB_TABLE + " WHERE " + COLUMN_TXT + " LIKE '" + queryWord + "%'";
+        Cursor c = mDB.rawQuery(countQuery, null);
+        c.moveToFirst();
+        count = c.getInt(0);
+        if (count > limitNum) {
+            return limitNum;
+        } else if (count <= 0) {
+            return 0;
+        } else {
+            return count;
+        }
     }
 
-
-    public void delRec(long id) {
-        mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
-    }
 
 
     private class DBHelper extends SQLiteOpenHelper {
